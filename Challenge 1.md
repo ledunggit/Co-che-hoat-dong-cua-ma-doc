@@ -56,8 +56,16 @@ Mặt khác, vì biến buf được cấp bộ nhớ là 40 bytes cho nên trư
 app-systeme-ch13@challenge02:~$ python -c "print 'A'*40 + 'LDLD'" | ./ch13 
 
 [buf]: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDDD
-[check] 0x44444444
+[check] 0x4c444c44
 
 You are on the right way!
 ```
-Một dữ kiện nữa là giá trị cần ghi là 0xdeadbeef
+Như kết quả in ra ta thấy biến check nhận giá trị là 0x4c444c44 ~ LDLD (hex -> text). Do đó để biến check nhận giá trị là 0xdeadbeef, ta sẽ thay đổi câu lệnh thành:
+```Bash
+app-systeme-ch13@challenge02:~$ python -c "print 'A'*40 + 'LDLD'" | ./ch13 
+
+[buf]: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDDD
+[check] 0x4c444c44
+
+You are on the right way!
+```
