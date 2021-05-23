@@ -41,7 +41,23 @@ int main()
    return 0;
 }
 ```
-Rõ ràng ta thấy để vào được shell bằng câu lệnh ```C system("/bin/bash"); ``` thì ta cần biến check có giá trị là 0xdeadbeef, mặt khác ở hai câu lệnh ```C   printf("\n[buf]: %s\n", buf);
-  printf("[check] %p\n", check); ``` ta thấy chương trình sẽ in ra hai giá trị của buf và check, cho nên ta sẽ nghĩ tới việc ghi đè giá trị buf qua giá trị check ở trong bộ nhớ.
- 
+Rõ ràng ta thấy để vào được shell bằng câu lệnh:
+```C 
+system("/bin/bash"); 
+``` 
+thì ta cần biến check có giá trị là 0xdeadbeef, mặt khác ở hai câu lệnh 
+```C   
+printf("\n[buf]: %s\n", buf);
+printf("[check] %p\n", check); 
+``` 
+ta thấy chương trình sẽ in ra hai giá trị của buf và check, cho nên ta sẽ nghĩ tới việc ghi đè giá trị buf qua giá trị check ở trong bộ nhớ.
+Mặt khác, vì biến buf được cấp bộ nhớ là 40 bytes cho nên trước hết ta sẽ ghi đầy 40 bytes này, sau đó ghi tiếp các bytes khác, các bytes này sẽ tiếp tục ghi lấn tới và ghi đè lên vùng nhớ của biến check, ta thử in 40 kí tự A và thêm 4 kí tự LDLD vào thì ta thấy biến buf và check có giá trị như sau:
+```Bash
+app-systeme-ch13@challenge02:~$ python -c "print 'A'*40 + 'LDLD'" | ./ch13 
 
+[buf]: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDDD
+[check] 0x44444444
+
+You are on the right way!
+```
+Một dữ kiện nữa là giá trị cần ghi là 0xdeadbeef
