@@ -92,3 +92,4 @@ cat .passwd
 ```
 Vậy flag hay password ở đây là:
 ## 1w4ntm0r3pr0np1s
+
