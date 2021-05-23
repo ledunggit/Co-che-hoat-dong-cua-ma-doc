@@ -1,4 +1,4 @@
-# Co-che-hoat-dong-cua-ma-doc - challenge CTF Write up
+# Co-che-hoat-dong-cua-ma-doc - challenge 1 CTF Write up
 ```html
 ELF x86 - Stack buffer overflow basic 1 :  ssh -p 2222 app-systeme-ch13@challenge02.root-me.org
 ```
@@ -41,3 +41,7 @@ int main()
    return 0;
 }
 ```
+Rõ ràng ta thấy để vào được shell bằng câu lệnh ```C system("/bin/bash"); ``` thì ta cần biến check có giá trị là 0xdeadbeef, mặt khác ở hai câu lệnh ```C   printf("\n[buf]: %s\n", buf);
+  printf("[check] %p\n", check); ``` ta thấy chương trình sẽ in ra hai giá trị của buf và check, cho nên ta sẽ nghĩ tới việc ghi đè giá trị buf qua giá trị check ở trong bộ nhớ.
+ 
+
