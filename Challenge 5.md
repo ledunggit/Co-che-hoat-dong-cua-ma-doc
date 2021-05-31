@@ -107,9 +107,11 @@ PATH=$(/usr/bin/python -c 'print "/usr/local/bin:" + "A" * (164-16)') peda -ex "
 
 ```
 ![image](https://user-images.githubusercontent.com/64201705/120206275-327d1900-c255-11eb-8600-7ae63b32b00d.png)
+
 Ta thấy EIP bị ghi đè bởi kí tự "AAA"
 Tiếp theo ta sẽ thử ghi đè lên %ebp + 8 | rep movsl destination address để gọi shellcode của ta được lưu trong biến môi trường SHELLCODE sẽ tạo sau này:
 - Trước hết, ta xem địa chỉ dòng lệnh ret nằm ở vị trí nào, ta sẽ đặt breakpoint ngay trước lệnh ret:
+
 ![image](https://user-images.githubusercontent.com/64201705/120206972-0746f980-c256-11eb-8790-e8dba35e7bfa.png)
 
 - Bây giờ ta sẽ tiến hành ghi đè nó bằng payload:
